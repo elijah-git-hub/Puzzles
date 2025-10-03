@@ -1,67 +1,53 @@
-import streamlit as st
 import gspread
-from google.oauth2.service_account import Credentials
+from oauth2client.service_account import ServiceAccountCredentials
+import streamlit as st
 
-# --- Define proper scopes ---
-SCOPES = [
-    "https://www.googleapis.com/auth/spreadsheets",
-    "https://www.googleapis.com/auth/drive"
-]
-
-# --- Authenticate using Streamlit secrets ---
-service_account_info = st.secrets["gspread_service_account"]
-creds = Credentials.from_service_account_info(service_account_info, scopes=SCOPES)
+# Google Sheets setup
+scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+creds = ServiceAccountCredentials.from_json_keyfile_name("puzzle-game.json", scope)
 client = gspread.authorize(creds)
 
-# --- Open your spreadsheet ---
-SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1FMIanFpOTI3JXZFHMB_eAhFa0OkydcbTQjY-4jCq_Xw/edit"
-try:
-    spreadsheet = client.open_by_url(SPREADSHEET_URL)
-    sheet = spreadsheet.sheet1
-except Exception as e:
-    st.error(f"Error accessing sheet: {e}")
-    st.stop()
+SHEET_ID = "1FMIanFpOTI3JXZFHMB_eAhFa0OkydcbTQjY-4jCq_Xw"
+SHEET_NAME = "Sheet1"
+sheet = client.open_by_key(SHEET_ID).worksheet(SHEET_NAME)
 
-# --- Streamlit UI ---
-st.title("🔎 Puzzle Search")
-search_text = st.text_input("Enter text to search:")
+# Streamlit UI
+st.title("Puzzle Search")
+search_value = st.text_input("Enter value to search:")
 
-# Dynamic border colors
-border_style = ""
-match_found = False
-
-if search_text:
-    rows = sheet.get_all_values()
-    matches = []
-
-    for row in rows:
-        if row[0].strip() == search_text.strip():
-            # Create "key = value" for non-empty cells after first column
-            for i in range(1, len(row)):
-                if row[i].strip():  # skip empty cells
-                    matches.append(f"{row[0]} = {row[i]}")
+if search_value:
+    all_data = sheet.get_all_values()
+    matches = [row for row in all_data if row and row[0] == search_value]  # search all rows including first
 
     if matches:
-        match_found = True
-        border_style = "2px solid green"
-        for match in matches:
-            # Display image if value is an URL
-            if match.split(" = ")[1].startswith("http"):
-                st.image(match.split(" = ")[1], use_container_width=True)
-            else:
-                st.write(match)
-    else:
-        border_style = "2px solid red"
-        st.warning("No matches found!")
+        st.write("Found match")
+        for row in matches:
+            for i, cell in enumerate(row):
+                if i == 0 or not cell.strip():
+                    continue  # skip empty cells & first column (since it's the search key)
 
-# Apply dynamic border color via custom CSS
-st.markdown(
-    f"""
-    <style>
-    div[data-baseweb="input"] input {{
-        border: {border_style} !important;
-    }}
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+                # IMAGE types
+                if cell.lower().endswith((".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg")):
+                    st.image(cell, caption=f"{row[0]}", use_container_width=True)
+
+                # VIDEO types
+                elif cell.lower().endswith((".mp4", ".webm", ".ogg", ".mov", ".mkv")):
+                    st.video(cell)
+
+                # AUDIO types
+                elif cell.lower().endswith((".mp3", ".wav", ".ogg", ".flac", ".aac", ".m4a")):
+                    st.audio(cell)
+
+                # YouTube links
+                elif "youtube.com" in cell.lower() or "youtu.be" in cell.lower():
+                    st.video(cell)
+
+                # Other links
+                elif cell.startswith("http://") or cell.startswith("https://"):
+                    st.markdown(f"{row[0]} = [Link]({cell})")
+
+                # Plain text
+                else:
+                    st.write(f"{row[0]} = {cell}")
+    else:
+        st.warning("No matches found.")

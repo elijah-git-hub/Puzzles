@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "puzzle-game-474009",
+  "private_key_id": "0104e089c861252852148ae2f45e5d9840e16138",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCSiE5agpYX+7Ae\n+siVcUBXj+KWEStCuMQy5CnlbcfTzazNxt7qlj63O3tpe01r2cYcTIRpgyscY+DX\nl/ClV6Msf+awPNWQDMBC1GtGVTBpdRgPRrJyJKBu7paHMKMvJOA+cokjdhKLLwzt\nuCSojJREAFiRwO0iqryo7IvaqeEJpkaK+zPCSglPfdQFcOtf4w05lZgxhD2h7uX1\nDUJ5C/xzORMsoHf54a4jZurMn131/XI4w1VmmvhPbKQKmTcmBVlGMXRt+Xu/Pgbx\nOZ/oYE5Df5GzRpiU0HHx3ekLIFXTsGGGAnCpam6VJ4fTLknl0fK2Oz5EtHHZ0Dq6\nT09pF4CrAgMBAAECggEAQeK29FxuF3eML8nMQeGrsBNaquYqYPRKB6XurqHHbVU3\n40iNt8X5ihLdQUb3P0yqltPS38xiKIBCOz4urnFyxZH2zHx1/DC3i/UODRBF1c0Y\nFdpQZyFP38E4fq3gWdTHXVzLi93NpbZwpjybgwu+qLrNGDA6j9FcRcoich3bOSZT\ni+oSusEsdHSYMSqQLpBlusKaprwIjtKB6ZP2+qYLKcZmR6kF+7ghxzw9mBrhRlVy\ncQWQiiX0ktuyjwV4ONG2Wu11N0IJ+d/vfjX2nJxi/yV4/XB1h/mLpkbbtoNM5q95\nVmmzSjMZkl+iXVKFsPk7ZJTWpaJ+zgVY9Ibx8GT4EQKBgQDKvCRveDGCztVpJUFw\n+OiQ8CSOJFbPSTO+O9G6oRbK+2sUc8KJfZeI+xTTF09+BNA8YNRFCD5CoqOvVBug\nWs9W6ClXMCqgJk4K/rr3kuyEUg7hXUH3JT6/MspubZMmMfHEG+zjdRouDVrv89Jn\nelAAXJDCERiNDu2KDl2L0iwdmwKBgQC5CAK1AnI4701K6Xl9E7C658BsIpqKJMU1\nfhj4m1lXJ/YYoLr1aoJ0FKFVRzXypze5ZREyXYzGoD3+wPV1IsF/yb7paxyAKW3o\nJabVqQ6MNY4ah2Tm3ONZ72wTFlEczB+cbekkupkDHlXFkKIpg7LfKCHHysZ0WX6U\nWfPIvzniMQKBgQCZWrQc9chN8HMSNDJKaJ5TdLPSKb7Y0cCoN8uv5sa9CG25bM9M\n/Ymw/myEOO/SnYV/BqfLCC9AbJJwv6ieJdMNJFSRNUgpGJCUVJfNSoBKn1/OLaMG\ndk/+hUcHPS/ABqug8pbAgAYrq8KMG92elLELdPmzMwdlPFOGyNMOPw9L3QKBgQCJ\nEOoQdLNwgbTcHYAlq4RrsGnWsPuSAhMkwTh2UX4pFi0zqT1Vt4TTwMSSi6HnEwAw\nkjHfAXXbXbEPGpm6H/j/VM/b0cDXH9mO8vVXqVhhfPq7pDiW3GJ+qOGCcjG8B2oT\nU0g2MRRQPxSCudWmsyy6Ktx7SDci0Xj3JHt25lFWwQKBgHZykVv84z+y8NR7ykR0\n/IXjao1rUwPwgdjE8ukC4ZmQpbaUNryeDfeppVi9x1LgRCV3WxMgsMDME9EW2Tc5\n57TfK6EI7rYwBATkGux50OvybnrTB26F14PR2czTCAB1D9VclTP8UunLMgeWdwCs\ntXbniRJXAimzv2Vyi/M6IpUW\n-----END PRIVATE KEY-----\n",
+  "client_email": "puzzlegame@puzzle-game-474009.iam.gserviceaccount.com",
+  "client_id": "117516544186104113499",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/puzzlegame%40puzzle-game-474009.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
