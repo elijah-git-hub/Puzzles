@@ -1,86 +1,60 @@
 import streamlit as st
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2.service_account import Credentials
 
-# --- Authenticate Google Sheets ---
-scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
+# --- Authenticate using Streamlit secrets ---
+service_account_info = st.secrets["gspread_service_account"]
+creds = Credentials.from_service_account_info(service_account_info)
 client = gspread.authorize(creds)
 
-# --- Open your sheet ---
+# --- Open your spreadsheet ---
 SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1FMIanFpOTI3JXZFHMB_eAhFa0OkydcbTQjY-4jCq_Xw/edit"
-spreadsheet = client.open_by_url(SPREADSHEET_URL)
-sheet = spreadsheet.sheet1  # first worksheet
+try:
+    spreadsheet = client.open_by_url(SPREADSHEET_URL)
+    sheet = spreadsheet.sheet1
+except Exception as e:
+    st.error(f"Error accessing sheet: {e}")
+    st.stop()
 
+# --- Streamlit UI ---
 st.title("🔎 Puzzle Search")
-st.write("Type a value to search")
+search_text = st.text_input("Enter text to search:")
 
-# --- User input ---
-search_text = st.text_input("Search term:", key="search")
+# Dynamic border colors
+border_style = ""
+match_found = False
 
-# --- Get all rows ---
-rows = sheet.get_all_values()
-status = None  # for border feedback
+if search_text:
+    rows = sheet.get_all_values()
+    matches = []
 
-if search_text.strip():
-    result = None
     for row in rows:
-        if row and row[0].strip().lower() == search_text.strip().lower():  # ignore case and spaces
-            result = row
-            break
+        if row[0].strip() == search_text.strip():
+            # Create "key = value" for non-empty cells after first column
+            for i in range(1, len(row)):
+                if row[i].strip():  # skip empty cells
+                    matches.append(f"{row[0]} = {row[i]}")
 
-    if result:
-        key = result[0]
-        values = result[1:]
-        for val in values:
-            if val.strip():  # skip empty cells
-                # check if value is an image URL
-                if val.lower().startswith("http") and any(val.lower().endswith(ext) for ext in [".png", ".jpg", ".jpeg", ".gif", ".webp"]):
-                    st.image(val, caption=f"{key}", use_container_width=True)
-                else:
-                    st.write(f"{key} = {val}")
-        status = "success"
+    if matches:
+        match_found = True
+        border_style = "2px solid green"
+        for match in matches:
+            if match.startswith("http"):  # If it's an image URL
+                st.image(match, use_container_width=True)
+            else:
+                st.write(match)
     else:
-        st.error(f"No matches found for '{search_text}'")
-        status = "error"
+        border_style = "2px solid red"
+        st.warning("No matches found!")
 
-# --- Base CSS: remove default red box on focus ---
-base_css = """
-<style>
-.stTextInput > div > div > input {
-    border: 2px solid #ccc !important;
-    box-shadow: none !important;
-    outline: none !important;
-}
-.stTextInput > div > div > input:focus {
-    border: 2px solid #ccc !important;
-    box-shadow: none !important;
-    outline: none !important;
-}
-</style>
-"""
-st.markdown(base_css, unsafe_allow_html=True)
-
-# --- Conditional input borders ---
-if status == "success":
-    st.markdown(
-        """
-        <style>
-        .stTextInput > div > div > input {
-            border: 2px solid green !important;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-elif status == "error":
-    st.markdown(
-        """
-        <style>
-        .stTextInput > div > div > input {
-            border: 2px solid red !important;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+# Apply dynamic border color via custom CSS
+st.markdown(
+    f"""
+    <style>
+    div[data-baseweb="input"] input {{
+        border: {border_style} !important;
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
