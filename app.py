@@ -2,9 +2,15 @@ import streamlit as st
 import gspread
 from google.oauth2.service_account import Credentials
 
+# --- Define proper scopes ---
+SCOPES = [
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive"
+]
+
 # --- Authenticate using Streamlit secrets ---
 service_account_info = st.secrets["gspread_service_account"]
-creds = Credentials.from_service_account_info(service_account_info)
+creds = Credentials.from_service_account_info(service_account_info, scopes=SCOPES)
 client = gspread.authorize(creds)
 
 # --- Open your spreadsheet ---
@@ -39,8 +45,9 @@ if search_text:
         match_found = True
         border_style = "2px solid green"
         for match in matches:
-            if match.startswith("http"):  # If it's an image URL
-                st.image(match, use_container_width=True)
+            # Display image if value is an URL
+            if match.split(" = ")[1].startswith("http"):
+                st.image(match.split(" = ")[1], use_container_width=True)
             else:
                 st.write(match)
     else:
